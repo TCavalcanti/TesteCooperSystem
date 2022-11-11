@@ -1,0 +1,29 @@
+<div class="container">
+
+    <h1>INVESTIMENTOS</h1>
+
+    <div class="card border-secondary p-3">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">NOME</th>
+                    <th scope="col" class="col-5">OBJETIVO</th>
+                    <th scope="col" class="col-3">SALDO TOTAL</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let investimento of investimentos; let i = index;"
+                    [class] = "investimento.indicadorCarencia === 'S'? 'disabled' : 'clickable-row'"
+                    [routerLink] = "investimento.indicadorCarencia === 'N'? ['/investimentos/resgate/', investimento.nome] : []">
+                    <td>{{i+1}}</td>
+                    <td>{{investimento.nome}}</td>
+                    <td>{{investimento.objetivo}}</td>
+                    <td>{{investimento.saldoTotal | currency:'BRL'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

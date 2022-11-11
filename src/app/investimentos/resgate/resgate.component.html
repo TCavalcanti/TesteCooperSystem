@@ -1,0 +1,155 @@
+<div class="container">
+    <h1>DADOS DO INVESTIMENTO</h1>
+
+    <div class="card d-flex flex-row">
+
+        <div class="col d-flex align-items-center border-end">
+            <div class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                </svg>
+            </div>
+
+            <div class="d-flex flex-column">
+                <p class="text-secondary p-0 m-0">
+                    NOME
+                </p>
+                <p class="text-dark p-0 m-0">
+                    {{investimento?.nome}}
+                </p>
+            </div>
+
+        </div>
+
+        <div class="col d-flex align-items-center">
+
+            <div class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                    class="bi bi-graph-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z" />
+                </svg>
+            </div>
+
+            <div class="d-flex flex-column">
+                <p class="text-secondary p-0 m-0">
+                    OBJETIVO
+                </p>
+                <p class="text-dark p-0 m-0">
+                    {{investimento?.objetivo}}
+                </p>
+            </div>
+
+        </div>
+        <div class="col d-flex align-items-center border-start">
+
+            <div class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                    class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                    <path
+                        d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z" />
+                </svg>
+            </div>
+
+            <div class="d-flex flex-column">
+                <p class="text-secondary p-0 m-0">
+                    SALDO TOTAL
+                </p>
+                <p class="text-dark p-0 m-0">
+                    {{investimento?.saldoTotal | currency:'BRL'}}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <h1 class="mt-5">RESGATE</h1>
+    <div class="card d-flex flex-row">
+
+        <form [formGroup]="formResgate" class="col">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <td scope="col" class="col">AÇÃO</td>
+                        <td scope="col" class="col">SALDO ACUMULADO</td>
+                        <td scope="col" class="col-3">VALOR A RESGATAR</td>
+                    </tr>
+                </thead>
+
+                <tbody formArrayName="stocks">
+                    <tr *ngFor="let stock of formArray()?.controls; let i=index;" [formGroupName]="i">
+                        <td>{{stock.value.nome}}</td>
+                        <td>{{stock.value.saldoAcumulado | currency:'BRL'}}</td>
+
+                        <td>
+                            <input type="text" currencyMask [options]="{prefix: 'R$ ', thousands: '.', decimal: ','}"
+                                class="form-control valorSaque" formControlName="valorSaque" />
+
+                            <div class="text-danger" *ngIf="!stock.valid && stock.touched">
+                                O valor a resgatar não pode ser maior que {{stock.value.saldoAcumulado | currency:
+                                'BRL'}}!
+                            </div>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+    <div class="card d-flex flex-row  align-items-center p-2 mt-5">
+        <p class="text-secondary p-0 m-0">
+            <span class="fw-bold text-dark">Valor total do resgate: </span>
+            {{calcularValorTotalSaque() | currency:'BRL'}}
+        </p>
+    </div>
+
+
+    <div class="card d-flex flex-row  align-items-center justify-content-end mt-3">
+        <button id="cancelar" class="btn btn-secondary border me-3 p-3" (click)="cancelar()">CANCELAR</button>
+        <button id="sacar" class="btn btn-primary border p-3" data-bs-toggle="modal" data-bs-target="#modalSucesso"
+            [disabled]="calcularValorTotalSaque() === 0">CONFIRMAR RESGATE</button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSucesso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackDropLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body d-flex flex-column">
+
+                <ng-container *ngIf="validarForm().length > 0; else noErrors">
+                    <h1>Dados Inválidos</h1>
+                    <p class="text-center">Você preencheu um ou mais campos com um valor acima do permitido:</p>
+                    <ng-container *ngFor="let item of validarForm()">
+                        <p class="itemErrado text-center">
+                            <strong>{{item.nome}}:</strong> O valor a resgatar não pode ser maior que
+                            {{item.saldoAcumulado | currency:'BRL'}}
+                        </p>
+                    </ng-container>
+                </ng-container>
+
+                <ng-template #noErrors>
+                    <h1>Resgate efetuado com sucesso!</h1>
+                    <div class="d-flex justify-content-center m-3 successModal">
+                        <button class="btn btn-primary p-3" data-bs-dismiss="modal" [routerLink]="['/investimentos']">
+                            NOVO RESGATE</button>
+                    </div>
+                </ng-template>
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

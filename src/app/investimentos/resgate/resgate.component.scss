@@ -1,0 +1,32 @@
+.container{
+    h1{
+        font-size: 2rem;
+    }
+
+    p{
+        font-size: 1.2rem;
+    }
+
+    table{
+        thead{
+            td{
+                font-weight: bold;
+                font-size: 0.9rem;
+            }
+        }
+    }
+}
+
+
+.modal-body{
+    h1{
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    .btn{
+        border-style: dashed;
+        border-width: 2px;
+        border-color: white;
+    }
+}
